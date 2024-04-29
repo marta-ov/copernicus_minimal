@@ -16,7 +16,7 @@ After some googling, i got to the conclusion that this happens because marinetoo
 
 An easy fix is to run the docker container as root. 
 
-This is a fairly hard error to reproduce locally. 
+This is a fairly hard error to reproduce locally. I haven't managed to do it.
 
 To build the docker image: 
 
