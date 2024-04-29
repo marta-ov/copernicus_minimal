@@ -1,0 +1,26 @@
+FROM python:3.12.2-slim-bookworm
+
+
+# create non-root user
+RUN groupadd -r copernicus_minimal_user && useradd -g copernicus_minimal_user copernicus_minimal_user
+RUN mkdir /home/copernicus_minimal_user  && \
+    mkdir /home/copernicus_minimal_user/forecasts  && \
+    mkdir /home/copernicus_minimal_user/copernicus_minimal
+
+RUN chown -R copernicus_minimal_user:copernicus_minimal_user /home/copernicus_minimal_user/
+
+COPY --chown=copernicus_minimal_user:copernicus_minimal_user copernicus_minimal/run_copernicus_weather_downloader_minimal.py /home/copernicus_minimal_user/copernicus_minimal/
+COPY --chown=copernicus_minimal_user:copernicus_minimal_user entrypoint.sh /home/copernicus_minimal_user/
+COPY --chown=copernicus_minimal_user:copernicus_minimal_user poetry.lock pyproject.toml /home/copernicus_minimal_user/
+
+USER copernicus_minimal_user
+
+# install python packages
+WORKDIR /home/copernicus_minimal_user
+RUN pip install --upgrade 'pip>=23.0.0,<24.0.0' && \
+    pip install 'poetry==1.8.2'
+
+ENV PATH $PATH:/home/copernicus_minimal_user/.local/bin
+RUN poetry install --without dev
+
+ENTRYPOINT ["/bin/bash", "/home/copernicus_minimal_user/entrypoint.sh"]
