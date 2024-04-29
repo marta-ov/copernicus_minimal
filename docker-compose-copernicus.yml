@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  copernicus-minimal:
+    image: copernicus_minimal:0.0.1
+    container_name: copernicus-minimal
+    environment:
+      - COPERNICUS_USERNAME=username
+      - COPERNICUS_PASSWORD=password
+    volumes:
+      - type: bind
+        source: /path/to/folder/host
+        target: /home/copernicus_minimal_user/forecasts
